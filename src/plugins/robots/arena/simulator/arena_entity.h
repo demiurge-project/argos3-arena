@@ -36,8 +36,6 @@ namespace argos {
                  Real f_gap = 0.03,
                  Real f_mass = 1.0f);
 
-      virtual ~CArenaEntity() {}
-
       virtual void Init(TConfigurationNode& t_tree);
       virtual void Reset();
       virtual void Destroy();

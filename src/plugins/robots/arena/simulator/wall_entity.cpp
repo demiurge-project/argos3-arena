@@ -37,7 +37,7 @@ namespace argos {
 
          AddComponent(*m_pcPositionalEntity);
 
-        PositionBoxes();
+         PositionBlocks();
 
          /* Update components */
          UpdateComponents();
@@ -52,7 +52,11 @@ namespace argos {
 
    void CWallEntity::Init(TConfigurationNode& t_tree) {
       try {
-         // TODO
+
+           /*
+             * Init parent
+             */
+           CComposableEntity::Init(t_tree);
 
          UpdateComponents();
 
@@ -62,13 +66,10 @@ namespace argos {
       }
    }
 
-
    /****************************************/
    /****************************************/
 
    void CWallEntity::Reset() {
-      // TODO
-
       /* Reset all components */
       CComposableEntity::Reset();
       /* Update components */
@@ -79,35 +80,36 @@ namespace argos {
    /****************************************/
 
    void CWallEntity::Destroy() {
-       // TODO
+
+       CComposableEntity::Destroy();
    }
 
    /****************************************/
    /****************************************/
 
-   void CWallEntity::AddBox(CBoxEntity& c_box) {
+   void CWallEntity::AddBlock(CBlockEntity& c_block) {
 
       Real fFirstLED = (m_fGap/2)-(m_cSize.GetY()/2);
       UInt32 unNumberLEDs = ceil((m_cSize.GetY())/m_fGap);
 
       for (UInt32 i=0; i < unNumberLEDs; i++){
           Real unPosition = fFirstLED + i*m_fGap;
-          c_box.AddLED(CVector3(0.005,  unPosition, 0.04), CColor::GRAY60);
+          c_block.AddLED(CVector3(0.005,  unPosition, 0.04), CColor::BLACK);
       }
 
-      c_box.Enable();
-      c_box.GetLEDEquippedEntity().AddToMedium(*m_pcLEDMedium);
-      AddComponent(c_box);
-      m_vBoxes.push_back(&c_box);
-      c_box.Update();
+      c_block.Enable();
+      c_block.GetLEDEquippedEntity().AddToMedium(*m_pcLEDMedium);
+      AddComponent(c_block);
+      m_vBoxes.push_back(&c_block);
+      c_block.Update();
    }
 
    /****************************************/
    /****************************************/
 
-   void CWallEntity::PositionBoxes() {
+   void CWallEntity::PositionBlocks() {
 
-     CBoxEntity* pcBox;
+     CBlockEntity* pcBlock;
      Real fWallLenght = m_unNumberBoxes * m_cSize.GetY();
      Real fFirstBox = (-fWallLenght/2)+(m_cSize.GetY()/2);
      CRadians fAngleZ, fAngleY, fAngleX;
@@ -116,8 +118,9 @@ namespace argos {
      for(UInt32 i = 0; i < m_unNumberBoxes; ++i) {
        std::ostringstream id;
 
-       id << this->GetId() << ".box_" << (i+1);
-       pcBox = new CBoxEntity(id.str().c_str(),
+       id << this->GetId() << ".block_" << (i+1);
+       pcBlock = new CBlockEntity(this,
+                                  id.str().c_str(),
                                   m_pcPositionalEntity->GetPosition() + CVector3((fFirstBox)+(i*m_cSize.GetY())*Sin(-fAngleZ),
                                                                                  (fFirstBox)+(i*m_cSize.GetY())*Cos(-fAngleZ),
                                                                                  0),
@@ -125,7 +128,7 @@ namespace argos {
                                   false,
                                   m_cSize,
                                   m_fMass);
-       AddBox(*pcBox);
+       AddBlock(*pcBlock);
      }
    }
 

@@ -12,9 +12,10 @@
 #include <argos3/plugins/simulator/entities/box_entity.h>
 #include <argos3/plugins/simulator/media/led_medium.h>
 #include "arena_entity.h"
+#include "block_entity.h"
 
 namespace argos {
-   class CBoxEntity;
+   class CBlockEntity;
    class CWallEntity;
    class CArenaEntity;
 }
@@ -37,7 +38,7 @@ namespace argos {
                  Real f_gap = 0.03,
                  Real f_mass = 1.0f);
 
-      virtual ~CWallEntity() {}
+      //~CWallEntity();
 
       virtual void Init(TConfigurationNode& t_tree);
       virtual void Reset();
@@ -55,20 +56,20 @@ namespace argos {
          return *m_pcPositionalEntity;
       }
 
-      void AddBox(CBoxEntity& c_box);
+      void AddBlock(CBlockEntity& c_block);
 
-      void PositionBoxes();
+      void PositionBlocks();
 
       bool IsEven(UInt32 unNumber);
 
-      inline const std::vector<CBoxEntity*>& GetBoxes() {
+      inline const std::vector<CBlockEntity*>& GetBlocks() {
          return m_vBoxes;
       }
 
    private:
 
       CPositionalEntity*          m_pcPositionalEntity;
-      std::vector<CBoxEntity*>  m_vBoxes;
+      std::vector<CBlockEntity*>  m_vBoxes;
       CLEDMedium*               m_pcLEDMedium;
       CVector3                  m_cSize;
       Real                      m_fMass;

@@ -57,6 +57,12 @@ namespace argos {
       try {
          // TODO
 
+           /*
+             * Init parent
+             */
+           CComposableEntity::Init(t_tree);
+
+
          /* Update components */
          UpdateComponents();
 
@@ -71,7 +77,6 @@ namespace argos {
    /****************************************/
 
    void CArenaEntity::Reset() {
-      // TODO
       /* Reset all components */
       CComposableEntity::Reset();
       /* Update components */
@@ -82,7 +87,8 @@ namespace argos {
    /****************************************/
 
    void CArenaEntity::Destroy() {
-       // TODO
+
+       CComposableEntity::Destroy();
    }
 
    /****************************************/
@@ -129,15 +135,15 @@ namespace argos {
    void CArenaEntity::SetArenaColor(CColor vColor){
        CArenaEntity* pcArena = this;
        CWallEntity* pcWall;
-       CBoxEntity* pcBox;
+       CBlockEntity* pcBlock;
        std::vector<CWallEntity*> pcWalls = pcArena->GetWalls();
 
        for (std::vector<CWallEntity*>::iterator itW = pcWalls.begin(); itW!=pcWalls.end(); ++itW){
            pcWall = m_vWalls.at(std::distance(pcWalls.begin(),itW));
-           std::vector<CBoxEntity*> pcBoxes = pcWall->GetBoxes();
-           for (std::vector<CBoxEntity*>::iterator itB = pcBoxes.begin(); itB!=pcBoxes.end(); ++itB){
-               pcBox = pcBoxes.at(std::distance(pcBoxes.begin(),itB));
-               CLEDEquippedEntity& pcLED = pcBox->GetLEDEquippedEntity();
+           std::vector<CBlockEntity*> pcBlocks = pcWall->GetBlocks();
+           for (std::vector<CBlockEntity*>::iterator itB = pcBlocks.begin(); itB!=pcBlocks.end(); ++itB){
+               pcBlock = pcBlocks.at(std::distance(pcBlocks.begin(),itB));
+               CLEDEquippedEntity& pcLED = pcBlock->GetLEDEquippedEntity();
                pcLED.SetAllLEDsColors(vColor);
                pcLED.Update();
            }
@@ -149,12 +155,12 @@ namespace argos {
 
    void CArenaEntity::SetWallColor(UInt32 unWallID, CColor vColor){
        CWallEntity* pcWall;
-       CBoxEntity* pcBox;
+       CBlockEntity* pcBlock;
        pcWall = m_vWalls.at(unWallID-1);
-       std::vector<CBoxEntity*> pcBoxes = pcWall->GetBoxes();
-       for (std::vector<CBoxEntity*>::iterator it = pcBoxes.begin(); it!=pcBoxes.end(); ++it){
-           pcBox = pcBoxes.at(std::distance(pcBoxes.begin(),it));
-           CLEDEquippedEntity& pcLED = pcBox->GetLEDEquippedEntity();
+       std::vector<CBlockEntity*> pcBlocks = pcWall->GetBlocks();
+       for (std::vector<CBlockEntity*>::iterator it = pcBlocks.begin(); it!=pcBlocks.end(); ++it){
+           pcBlock = pcBlocks.at(std::distance(pcBlocks.begin(),it));
+           CLEDEquippedEntity& pcLED = pcBlock->GetLEDEquippedEntity();
            pcLED.SetAllLEDsColors(vColor);
            pcLED.Update();
        }
@@ -167,9 +173,9 @@ namespace argos {
 
        CWallEntity* pcWall;
        pcWall = m_vWalls.at(unWallID-1);
-       CBoxEntity* pcBox;
-       pcBox = pcWall->GetBoxes().at(unBoxID-1);
-       CLEDEquippedEntity& pcLED = pcBox->GetLEDEquippedEntity();
+       CBlockEntity* pcBlock;
+       pcBlock = pcWall->GetBlocks().at(unBoxID-1);
+       CLEDEquippedEntity& pcLED = pcBlock->GetLEDEquippedEntity();
        pcLED.SetAllLEDsColors(vColor);
        pcLED.Update();
    }
