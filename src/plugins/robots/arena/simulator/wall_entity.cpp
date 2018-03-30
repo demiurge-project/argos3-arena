@@ -94,7 +94,8 @@ namespace argos {
 
       for (UInt32 i=0; i < unNumberLEDs; i++){
           Real unPosition = fFirstLED + i*m_fGap;
-          c_block.AddLED(CVector3(0.005,  unPosition, 0.04), CColor::BLACK);
+          c_block.AddLED(CVector3(0.0125,  unPosition, 0.067), CColor::BLACK);
+          //c_block.AddLED(CVector3(0.005,  unPosition, 0.04), CColor::BLACK);
       }
 
       c_block.Enable();

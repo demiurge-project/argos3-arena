@@ -15,7 +15,7 @@ namespace argos {
    /****************************************/
    /****************************************/
 
-   static const Real LED_RADIUS     = 0.01f;
+   static const Real LED_RADIUS     = 0.0025f;
    const GLfloat MOVABLE_COLOR[]    = { 1.0f, 0.0f, 0.0f, 1.0f };
    const GLfloat NONMOVABLE_COLOR[] = { 0.7f, 0.7f, 0.7f, 1.0f };
    const GLfloat SPECULAR[]         = { 0.0f, 0.0f, 0.0f, 1.0f };
