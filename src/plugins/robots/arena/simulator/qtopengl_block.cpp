@@ -15,7 +15,8 @@ namespace argos {
    /****************************************/
    /****************************************/
 
-   static const Real LED_RADIUS     = 0.0025f;
+   //static const Real LED_RADIUS     = 0.0025f; // Original DAGR
+   static const Real LED_RADIUS     = 0.0085f; // Modified DAGR
    const GLfloat MOVABLE_COLOR[]    = { 1.0f, 0.0f, 0.0f, 1.0f };
    const GLfloat NONMOVABLE_COLOR[] = { 0.7f, 0.7f, 0.7f, 1.0f };
    const GLfloat SPECULAR[]         = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -169,32 +170,37 @@ namespace argos {
       CVector3 cNormal, cPoint;
       CRadians cSlice(CRadians::TWO_PI / m_unVertices);
 
-      glBegin(GL_TRIANGLE_STRIP);
-      for(CRadians cInclination; cInclination <= CRadians::PI; cInclination += cSlice) {
-         for(CRadians cAzimuth; cAzimuth <= CRadians::TWO_PI; cAzimuth += cSlice) {
+      glBegin(GL_TRIANGLE_FAN);
+      cNormal.Set(0.0f, 0.0f, 0.0f);
+      cPoint = 1.0f * cNormal;
+      glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
+      glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-            cNormal.FromSphericalCoords(1.0f, cInclination, cAzimuth);
-            cPoint = LED_RADIUS * cNormal;
-            glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
-            glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
+      cNormal.Set(0.0f, 1.0f, 1.0f);
+      cPoint = LED_RADIUS * cNormal;
+      glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
+      glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-            cNormal.FromSphericalCoords(1.0f, cInclination + cSlice, cAzimuth);
-            cPoint = LED_RADIUS * cNormal;
-            glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
-            glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
+      cNormal.Set(0.0f, -1.0f, 1.0f);
+      cPoint = LED_RADIUS * cNormal;
+      glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
+      glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-            cNormal.FromSphericalCoords(1.0f, cInclination, cAzimuth + cSlice);
-            cPoint = LED_RADIUS * cNormal;
-            glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
-            glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
+      cNormal.Set(0.0f, -1.0f, -1.0f);
+      cPoint = LED_RADIUS * cNormal;
+      glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
+      glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-            cNormal.FromSphericalCoords(1.0f, cInclination + cSlice, cAzimuth + cSlice);
-            cPoint = LED_RADIUS * cNormal;
-            glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
-            glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
+      cNormal.Set(0.0f, 1.0f, -1.0f);
+      cPoint = LED_RADIUS * cNormal;
+      glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
+      glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-         }
-      }
+      cNormal.Set(0.0f, 1.0f, 1.0f);
+      cPoint = LED_RADIUS * cNormal;
+      glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
+      glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
+
       glEnd();
    }
 
