@@ -84,7 +84,7 @@ namespace argos {
             std::string strMedium;
             GetNodeAttribute(GetNode(t_tree, "leds"), "medium", strMedium);
             m_pcLEDMedium = &CSimulator::GetInstance().GetMedium<CLEDMedium>(strMedium);
-            m_pcLEDEquippedEntity->AddToMedium(*m_pcLEDMedium);
+            m_pcLEDEquippedEntity->SetMedium(*m_pcLEDMedium);
          }
          UpdateComponents();
       }
@@ -115,14 +115,14 @@ namespace argos {
    /****************************************/
 
    void CBlockEntity::EnableLEDs(CLEDMedium& c_medium) {
-      m_pcLEDEquippedEntity->AddToMedium(c_medium);
+      m_pcLEDEquippedEntity->SetMedium(c_medium);
    }
 
    /****************************************/
    /****************************************/
 
    void CBlockEntity::DisableLEDs() {
-      m_pcLEDEquippedEntity->RemoveFromMedium();
+      m_pcLEDEquippedEntity->Disable();
    }
    
    /****************************************/

@@ -99,7 +99,7 @@ namespace argos {
       }
 
       c_block.Enable();
-      c_block.GetLEDEquippedEntity().AddToMedium(*m_pcLEDMedium);
+      c_block.GetLEDEquippedEntity().SetMedium(*m_pcLEDMedium);
       AddComponent(c_block);
       m_vBoxes.push_back(&c_block);
       c_block.Update();
