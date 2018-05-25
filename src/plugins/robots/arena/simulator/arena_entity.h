@@ -62,9 +62,33 @@ namespace argos {
 
       void SetArenaColor(CColor vColor);
 
-      void SetWallColor(UInt32 unWallID, CColor vColor);
+      void SetWallColor(SInt32 unWallID, CColor vColor);
 
-      void SetBoxColor(UInt32 unBoxID, UInt32 unWallID, CColor vColor);
+      void SetBoxColor(SInt32 unBoxID, SInt32 unWallID, CColor vColor);
+
+      // TODO
+
+      void SetReferenceBlock(UInt32 unBoxID){
+          m_unReferenceBlock = unBoxID;
+      }
+
+      UInt32 GetReferenceBlock(UInt32){
+          return m_unReferenceBlock;
+      }
+
+      void SetBoxColor(SInt32 unBoxID, CColor vColor);
+
+      void SetLedColor(SInt32 unledID, SInt32 unBoxID, SInt32 unWallID, CColor vColor);
+
+      void SetLedColor(SInt32 unBoxID, SInt32 unWallID, CColor vColor);
+
+      void SetLedColor(SInt32 unWallID, CColor vColor);
+
+      void SetLedColor(CColor vColor);
+
+      UInt32 GetBoxParent();
+
+      //
 
       bool IsEven(UInt32 unNumber);
 
@@ -80,6 +104,11 @@ namespace argos {
       Real                      m_fGap;
       UInt32                    m_unNumberBoxes;
       UInt32                    m_unNumberEdges;
+      UInt32                    m_unReferenceBlock;
+
+      //TODO
+
+      CControllableEntity*        m_pcControllableEntity;
 
    };
 

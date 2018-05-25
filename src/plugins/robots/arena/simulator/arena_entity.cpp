@@ -106,20 +106,19 @@ namespace argos {
    void CArenaEntity::PositionWalls() {
      CWallEntity* pcWall;
      CRadians fAngle = (2 * CRadians::PI) / m_unNumberEdges;
+     CRadians fAngleZ, fAngleY, fAngleX;
+     m_pcPositionalEntity->GetOrientation().ToEulerAngles(fAngleZ,fAngleY,fAngleX);
      Real fRadious = InnerRadious();
-     Real fWallLenght = m_unNumberBoxes * m_cSize.GetY();
-     Real fFirstBox = (-fWallLenght/2)+(m_cSize.GetY()/2);
-     for(UInt32 i = 1; i <= m_unNumberEdges; ++i) {
+     for(UInt32 i = 0; i < m_unNumberEdges; ++i) {
        std::ostringstream id;
 
        id << this->GetId() << ".wall_" << i;
        pcWall = new CWallEntity(this,
                                 id.str().c_str(),
-                                m_pcPositionalEntity->GetPosition() + CVector3(-fFirstBox,-fFirstBox,0)
-                                                                    + CVector3((fRadious * Cos(fAngle * i))-(fFirstBox * Sin(-CRadians::PI + (fAngle * i))),
-                                                                               (fRadious * Sin(fAngle * i))+(fFirstBox * Cos(-CRadians::PI + (fAngle * i))),
+                                m_pcPositionalEntity->GetPosition() + CVector3((fRadious * Cos(fAngleZ + (fAngle * i))),
+                                                                               (fRadious * Sin(fAngleZ + (fAngle * i))),
                                                                                0),
-                                CQuaternion().FromEulerAngles(-CRadians::PI + (fAngle * i),CRadians::ZERO,CRadians::ZERO),
+                                CQuaternion().FromEulerAngles(-CRadians::PI +(fAngleZ + (fAngle * i)),CRadians::ZERO,CRadians::ZERO),
                                 m_cSize,
                                 "leds",
                                 m_unNumberBoxes,
@@ -153,7 +152,7 @@ namespace argos {
    /****************************************/
    /****************************************/
 
-   void CArenaEntity::SetWallColor(UInt32 unWallID, CColor vColor){
+   void CArenaEntity::SetWallColor(SInt32 unWallID, CColor vColor){
        CWallEntity* pcWall;
        CBlockEntity* pcBlock;
        pcWall = m_vWalls.at(unWallID-1);
@@ -169,7 +168,7 @@ namespace argos {
    /****************************************/
    /****************************************/
 
-   void CArenaEntity::SetBoxColor(UInt32 unBoxID, UInt32 unWallID, CColor vColor){
+   void CArenaEntity::SetBoxColor(SInt32 unBoxID, SInt32 unWallID, CColor vColor){
 
        CWallEntity* pcWall;
        pcWall = m_vWalls.at(unWallID-1);
@@ -179,6 +178,20 @@ namespace argos {
        pcLED.SetAllLEDsColors(vColor);
        pcLED.Update();
    }
+
+   /****************************************/
+   /****************************************/
+/*
+   void CArenaEntity::SetBoxColor(SInt32 unBoxID, CColor vColor){
+
+       CWallEntity* pcWall;
+       pcWall = m_vWalls.at(unWallID-1);
+       CBlockEntity* pcBlock;
+       pcBlock = pcWall->GetBlocks().at(unBoxID-1);
+       CLEDEquippedEntity& pcLED = pcBlock->GetLEDEquippedEntity();
+       pcLED.SetAllLEDsColors(vColor);
+       pcLED.Update();
+   }*/
 
    /****************************************/
    /****************************************/

@@ -112,7 +112,8 @@ namespace argos {
 
      CBlockEntity* pcBlock;
      Real fWallLenght = m_unNumberBoxes * m_cSize.GetY();
-     Real fFirstBox = (-fWallLenght/2)+(m_cSize.GetY()/2);
+     //Real fFirstBox = (-fWallLenght/2)+(m_cSize.GetY()/2);
+     Real fFirstBox = (fWallLenght/2)-(m_cSize.GetY()/2);
      CRadians fAngleZ, fAngleY, fAngleX;
      m_pcPositionalEntity->GetOrientation().ToEulerAngles(fAngleZ,fAngleY,fAngleX);
 
@@ -122,8 +123,8 @@ namespace argos {
        id << this->GetId() << ".block_" << (i+1);
        pcBlock = new CBlockEntity(this,
                                   id.str().c_str(),
-                                  m_pcPositionalEntity->GetPosition() + CVector3((fFirstBox)+(i*m_cSize.GetY())*Sin(-fAngleZ),
-                                                                                 (fFirstBox)+(i*m_cSize.GetY())*Cos(-fAngleZ),
+                                  m_pcPositionalEntity->GetPosition() + CVector3(((fFirstBox)-(i*m_cSize.GetY()))*Sin(-fAngleZ),
+                                                                                 ((fFirstBox)-(i*m_cSize.GetY()))*Cos(-fAngleZ),
                                                                                  0),
                                   m_pcPositionalEntity->GetOrientation(),
                                   false,
