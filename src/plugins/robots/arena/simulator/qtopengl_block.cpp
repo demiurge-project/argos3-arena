@@ -178,31 +178,31 @@ namespace argos {
 
       cNormal.Set(0.0f, 1.0f, 1.0f);
       cPoint = LED_RADIUS * cNormal;
-      cPoint.SetZ(0.075f);
+      //cPoint.SetZ(0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
       cNormal.Set(0.0f, -1.0f, 1.0f);
       cPoint = LED_RADIUS * cNormal;
-      cPoint.SetZ(0.075f);
+      //cPoint.SetZ(0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
       cNormal.Set(0.0f, -1.0f, -1.0f);
       cPoint = LED_RADIUS * cNormal;
-      cPoint.SetZ(-0.075f);
+      //cPoint.SetZ(-0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
       cNormal.Set(0.0f, 1.0f, -1.0f);
       cPoint = LED_RADIUS * cNormal;
-      cPoint.SetZ(-0.075f);
+      //cPoint.SetZ(-0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
       cNormal.Set(0.0f, 1.0f, 1.0f);
       cPoint = LED_RADIUS * cNormal;
-      cPoint.SetZ(0.075f);
+      //cPoint.SetZ(0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
