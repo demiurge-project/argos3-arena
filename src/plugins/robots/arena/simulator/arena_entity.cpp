@@ -8,6 +8,13 @@
 
 namespace argos {
 
+    /****************************************/
+    /****************************************/
+
+    CArenaEntity::CArenaEntity() :
+
+        CComposableEntity(NULL) {
+    }
 
    /****************************************/
    /****************************************/
@@ -54,21 +61,48 @@ namespace argos {
    /****************************************/
 
    void CArenaEntity::Init(TConfigurationNode& t_tree) {
-      try {
-         // TODO
+       try {
+                 /*
+                   * Init parent
+                   */
+                 CComposableEntity::Init(t_tree);
 
-           /*
-             * Init parent
-             */
-           CComposableEntity::Init(t_tree);
+                 /* Parse XML to get the position of the arena */
+                 GetNodeAttribute(t_tree, "position", m_cPosition);
 
+                 /* Parse XML to get the orientation of the arena */
+                 GetNodeAttribute(t_tree, "orientation", m_cOrientation);
 
-         /* Update components */
-         UpdateComponents();
+                 /* Parse XML to get the medium for the LEDS in the arena */
+                 GetNodeAttribute(t_tree, "led_medium", m_strLEDMedium);
 
-      }
-      catch(CARGoSException& ex) {
-         THROW_ARGOSEXCEPTION_NESTED("Failed to initialize entity \"" << GetId() << "\".", ex);
+                 /* Parse XML to get the size of each block in the arena */
+                 GetNodeAttribute(t_tree, "block_size", m_cSize);
+
+                 /* Parse XML to get the mass of each block in the arena */
+                 GetNodeAttribute(t_tree, "block_mass", m_fMass);
+
+                 /* Parse XML to get the spacing between LEDs in the blocks of the arena */
+                 GetNodeAttribute(t_tree, "led_spacing", m_fGap);
+
+                 /* Parse XML to get the number of blocks on each edge of the arena */
+                 GetNodeAttribute(t_tree, "n_blocks", m_unNumberBoxes);
+
+                 /* Parse XML to get the number of edges of of the arena */
+                 GetNodeAttribute(t_tree, "n_edges", m_unNumberEdges);
+
+                 m_pcLEDMedium = &CSimulator::GetInstance().GetMedium<CLEDMedium>(m_strLEDMedium);
+                 m_pcPositionalEntity = new CPositionalEntity(this, "pose_0", m_cPosition, m_cOrientation);
+                 AddComponent(*m_pcPositionalEntity);
+
+                 PositionWalls();
+
+                 /* Update components */
+                 UpdateComponents();
+
+             }
+             catch(CARGoSException& ex) {
+                 THROW_ARGOSEXCEPTION_NESTED("Failed to initialize entity \"" << GetId() << "\".", ex);
       }
    }
 
@@ -94,45 +128,85 @@ namespace argos {
    /****************************************/
    /****************************************/
 
-   void CArenaEntity::AddWall(CWallEntity& c_wall) {
-      AddComponent(c_wall);
-      m_vWalls.push_back(&c_wall);
-      c_wall.Update();
+   void CArenaEntity::PositionWalls() {
+
+     CRadians fAngle = (2 * CRadians::PI) / m_unNumberEdges;
+     CRadians fAngleZ, fAngleY, fAngleX;
+     m_pcPositionalEntity->GetOrientation().ToEulerAngles(fAngleZ,fAngleY,fAngleX);
+     Real fRadious = InnerRadious();
+
+     for(UInt32 unWallId = 0; unWallId < m_unNumberEdges; ++unWallId) {
+
+       CVector3 vWallPosition =  m_pcPositionalEntity->GetPosition() + CVector3((fRadious * Cos(fAngleZ + (fAngle * unWallId))),
+                                                                                (fRadious * Sin(fAngleZ + (fAngle * unWallId))),
+                                                                                0);
+       CQuaternion vWallOrientation = CQuaternion().FromEulerAngles(-CRadians::PI +(fAngleZ + (fAngle * unWallId)),
+                                                                    CRadians::ZERO,
+                                                                    CRadians::ZERO);
+
+       PositionBlocks(unWallId, vWallPosition, vWallOrientation);
+     }     
    }
 
    /****************************************/
    /****************************************/
 
-   void CArenaEntity::PositionWalls() {
-     CWallEntity* pcWall;
-     CRadians fAngle = (2 * CRadians::PI) / m_unNumberEdges;
-     CRadians fAngleZ, fAngleY, fAngleX;
-     m_pcPositionalEntity->GetOrientation().ToEulerAngles(fAngleZ,fAngleY,fAngleX);
-     Real fRadious = InnerRadious();
-     for(UInt32 i = 0; i < m_unNumberEdges; ++i) {
-       std::ostringstream id;
+   void CArenaEntity::PositionBlocks(UInt32 c_wallId, CVector3 c_wallPosition, CQuaternion c_wallOrientation) {
 
-       id << this->GetId() << ".wall_" << i;
-       pcWall = new CWallEntity(this,
-                                id.str().c_str(),
-                                m_pcPositionalEntity->GetPosition() + CVector3((fRadious * Cos(fAngleZ + (fAngle * i))),
-                                                                               (fRadious * Sin(fAngleZ + (fAngle * i))),
-                                                                               0),
-                                CQuaternion().FromEulerAngles(-CRadians::PI +(fAngleZ + (fAngle * i)),CRadians::ZERO,CRadians::ZERO),
-                                m_cSize,
-                                "leds",
-                                m_unNumberBoxes,
-                                m_fGap,
-                                m_fMass);
-       AddWall(*pcWall);
+     std::vector<CBlockEntity*> vWall;
+     CBlockEntity* pcBlock;
+     Real fWallLenght = m_unNumberBoxes * m_cSize.GetY();
+     //Real fFirstBox = (-fWallLenght/2)+(m_cSize.GetY()/2);
+     Real fFirstBox = (fWallLenght/2)-(m_cSize.GetY()/2);
+     CRadians fAngleZ, fAngleY, fAngleX;
+     c_wallOrientation.ToEulerAngles(fAngleZ,fAngleY,fAngleX);
+
+     for(UInt32 unBlockId = 0; unBlockId < m_unNumberBoxes; ++unBlockId) {
+
+       std::ostringstream id;
+       id << "block_" << c_wallId << "_" << (unBlockId+1);
+
+       pcBlock = new CBlockEntity(this,
+                                  id.str().c_str(),
+                                  c_wallPosition + CVector3(((fFirstBox)-(unBlockId*m_cSize.GetY()))*Sin(-fAngleZ),
+                                                            ((fFirstBox)-(unBlockId*m_cSize.GetY()))*Cos(-fAngleZ),
+                                                              0),
+                                  c_wallOrientation,
+                                  false,
+                                  m_cSize,
+                                  m_fMass);
+       AddBlock(*pcBlock);
+       vWall.push_back(pcBlock);
      }
+     m_vWalls.push_back(vWall);
+   }
+
+   /****************************************/
+   /****************************************/
+
+   void CArenaEntity::AddBlock(CBlockEntity& c_block) {
+
+      Real fFirstLED = (m_fGap/2)-(m_cSize.GetY()/2);
+      UInt32 unNumberLEDs = ceil((m_cSize.GetY())/m_fGap);
+
+      for (UInt32 i=0; i < unNumberLEDs; i++){
+          Real unPosition = fFirstLED + i*m_fGap;
+          //c_block.AddLED(CVector3(0.0125,  unPosition, 0.067), CColor::BLACK);
+          c_block.AddLED(CVector3(0.0075,  unPosition, 0.067), CColor::BLACK);
+      }
+
+      c_block.Enable();
+      c_block.GetLEDEquippedEntity().SetMedium(*m_pcLEDMedium);
+      AddComponent(c_block);
+      m_vBlocks.push_back(&c_block);
+      c_block.Update();
    }
 
    /****************************************/
    /****************************************/
 
    void CArenaEntity::SetArenaColor(CColor vColor){
-       CArenaEntity* pcArena = this;
+ /*      CArenaEntity* pcArena = this;
        CWallEntity* pcWall;
        CBlockEntity* pcBlock;
        std::vector<CWallEntity*> pcWalls = pcArena->GetWalls();
@@ -146,14 +220,14 @@ namespace argos {
                pcLED.SetAllLEDsColors(vColor);
                pcLED.Update();
            }
-       }
+       }*/
    }
 
    /****************************************/
    /****************************************/
 
    void CArenaEntity::SetWallColor(SInt32 unWallID, CColor vColor){
-       CWallEntity* pcWall;
+/*       CWallEntity* pcWall;
        CBlockEntity* pcBlock;
        pcWall = m_vWalls.at(unWallID-1);
        std::vector<CBlockEntity*> pcBlocks = pcWall->GetBlocks();
@@ -162,21 +236,21 @@ namespace argos {
            CLEDEquippedEntity& pcLED = pcBlock->GetLEDEquippedEntity();
            pcLED.SetAllLEDsColors(vColor);
            pcLED.Update();
-       }
+       }*/
    }
 
    /****************************************/
    /****************************************/
 
    void CArenaEntity::SetBoxColor(SInt32 unBoxID, SInt32 unWallID, CColor vColor){
-
+/*
        CWallEntity* pcWall;
        pcWall = m_vWalls.at(unWallID-1);
        CBlockEntity* pcBlock;
        pcBlock = pcWall->GetBlocks().at(unBoxID-1);
        CLEDEquippedEntity& pcLED = pcBlock->GetLEDEquippedEntity();
        pcLED.SetAllLEDsColors(vColor);
-       pcLED.Update();
+       pcLED.Update();*/
    }
 
    /****************************************/
@@ -215,6 +289,28 @@ namespace argos {
    }
 
    /****************************************/
+   /****************************************/
+
+      REGISTER_ENTITY(CArenaEntity,
+                      "cparena",
+                      "David Garzon Ramos [dgarzonr@ulb.ac.be]",
+                      "1.0",
+                      "Convex polygonal arena, developed at IRIDIA - ULB.",
+                      "The cparena is an arena designed to conduct experiments with the e-puck robot.\n"
+                      "For more information, refer to the dedicated web page\n"
+                      "(https://github.com/demiurge-project/argos3-arena).\n\n"
+                      "REQUIRED XML CONFIGURATION\n\n"
+                      "  <arena ...>\n"
+                      "    ...\n"
+                      "    <cparena id=\"cparena0\" position=\"0.0,0.0,0.0\" orientation=\"0,0,0\" block_size=\"0.01,0.25,0.1\" block_mass=\"1.0\" led_spacing=\"0.017\" led_medium=\"leds\" n_blocks=\"1\" n_edges=\"3\">\n"
+                      "    </cparena>\n"
+                      "    ...\n"
+                      "  </arena>\n\n"
+                      "Parameter description coming soon.\n\n",
+                      "Under development"
+                      );
+
+      /****************************************/
    /****************************************/
 
 

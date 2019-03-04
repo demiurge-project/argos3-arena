@@ -119,7 +119,6 @@ namespace argos {
 
      for(UInt32 i = 0; i < m_unNumberBoxes; ++i) {
        std::ostringstream id;
-
        id << this->GetId() << ".block_" << (i+1);
        pcBlock = new CBlockEntity(this,
                                   id.str().c_str(),

@@ -9,13 +9,13 @@
 
 namespace argos {
    class CBlockEntity;
-   class CWallEntity;
+   class CArenaEntity;
 }
 
 #include <argos3/core/simulator/entity/embodied_entity.h>
 #include <argos3/core/simulator/entity/composable_entity.h>
 #include <argos3/plugins/simulator/entities/led_equipped_entity.h>
-#include "wall_entity.h"
+#include "arena_entity.h"
 
 namespace argos {
 
@@ -25,9 +25,9 @@ namespace argos {
 
       ENABLE_VTABLE();
 
-      //CBlockEntity(CWallEntity* pc_parent);
+      CBlockEntity();
 
-      CBlockEntity(CWallEntity* pc_parent,
+      CBlockEntity(CArenaEntity* pc_parent,
                    const std::string& str_id,
                    const CVector3& c_position,
                    const CQuaternion& c_orientation,

@@ -10,10 +10,10 @@
 #include <argos3/core/simulator/space/space.h>
 #include <argos3/core/simulator/simulator.h>
 #include <argos3/plugins/simulator/media/led_medium.h>
-#include "wall_entity.h"
+#include "block_entity.h"
 
 namespace argos {
-   class CWallEntity;
+   class CBlockEntity;
    class CArenaEntity;
 }
 
@@ -24,6 +24,8 @@ namespace argos {
    public:
 
        ENABLE_VTABLE();
+
+      CArenaEntity();
 
       CArenaEntity(
                  const std::string& str_id,
@@ -44,7 +46,7 @@ namespace argos {
          return "arena";
       }
 
-      void AddWall(CWallEntity& c_wall);
+      void AddWall(std::vector<CBlockEntity*> c_wall);
 
       inline CPositionalEntity& GetPositionalEntity() {
          return *m_pcPositionalEntity;
@@ -54,7 +56,11 @@ namespace argos {
          return *m_pcPositionalEntity;
       }
 
-      inline const std::vector<CWallEntity*>& GetWalls() {
+      inline const std::vector<CBlockEntity*>& GetBlocks() {
+         return m_vBlocks;
+      }
+
+      inline const std::vector<std::vector<CBlockEntity*>>& GetWalls() {
          return m_vWalls;
       }
 
@@ -65,6 +71,10 @@ namespace argos {
       void SetWallColor(SInt32 unWallID, CColor vColor);
 
       void SetBoxColor(SInt32 unBoxID, SInt32 unWallID, CColor vColor);
+
+      void AddBlock(CBlockEntity& c_block);
+
+      void PositionBlocks(UInt32 c_wallId, CVector3 c_wallPosition, CQuaternion c_wallOrientation);
 
       // TODO
 
@@ -96,9 +106,13 @@ namespace argos {
 
    private:
 
-      CPositionalEntity*          m_pcPositionalEntity;
-      std::vector<CWallEntity*>  m_vWalls;
+      CPositionalEntity*        m_pcPositionalEntity;
+      std::vector<CBlockEntity*>  m_vBlocks;
+      std::vector<std::vector<CBlockEntity*>>  m_vWalls;
+      std::string               m_strLEDMedium;
       CLEDMedium*               m_pcLEDMedium;
+      CQuaternion               m_cOrientation;
+      CVector3                  m_cPosition;
       CVector3                  m_cSize;
       Real                      m_fMass;
       Real                      m_fGap;

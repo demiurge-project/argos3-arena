@@ -1,7 +1,6 @@
 set(ARGOS3_HEADERS_PLUGINS_ROBOTS_ARENA_SIMULATOR
   simulator/dynamics2d_block_model.h
   simulator/arena_entity.h
-  simulator/wall_entity.h
   simulator/block_entity.h)
 
 if(ARGOS_COMPILE_QTOPENGL)
@@ -19,7 +18,6 @@ set(ARGOS3_SOURCES_PLUGINS_ROBOTS_ARENA_SIMULATOR
   ${ARGOS3_HEADERS_PLUGINS_ROBOTS_ARENA_SIMULATOR}
   simulator/dynamics2d_block_model.cpp
   simulator/arena_entity.cpp
-  simulator/wall_entity.cpp
   simulator/block_entity.cpp)
 
 if(ARGOS_COMPILE_QTOPENGL)

@@ -25,7 +25,7 @@ namespace argos {
    /****************************************/
    /****************************************/
 
-   CBlockEntity::CBlockEntity(CWallEntity* pc_parent,
+   CBlockEntity::CBlockEntity(CArenaEntity* pc_parent,
                               const std::string& str_id,
                               const CVector3& c_position,
                               const CQuaternion& c_orientation,
