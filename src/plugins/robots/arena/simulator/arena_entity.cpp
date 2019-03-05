@@ -12,6 +12,11 @@ namespace argos {
    /****************************************/
    /****************************************/
 
+   CArenaEntity::CArenaEntity():
+       CComposableEntity(NULL),
+       m_pcPositionalEntity(NULL),
+       m_pcLEDMedium(NULL){}
+
    CArenaEntity::CArenaEntity(const std::string& str_id,
                               const CVector3& c_position,
                               const CQuaternion& c_orientation,
@@ -54,19 +59,44 @@ namespace argos {
    /****************************************/
 
    void CArenaEntity::Init(TConfigurationNode& t_tree) {
-      try {
-         // TODO
+       try {
 
-           /*
-             * Init parent
-             */
            CComposableEntity::Init(t_tree);
 
+           /* Parse XML to get the position of the arena */
+           GetNodeAttribute(t_tree, "position", m_cPosition);
 
-         /* Update components */
-         UpdateComponents();
+           /* Parse XML to get the orientation of the arena */
+           GetNodeAttribute(t_tree, "orientation", m_cOrientation);
 
-      }
+           /* Parse XML to get the medium for the LEDS in the arena */
+           GetNodeAttribute(t_tree, "led_medium", m_strLEDMedium);
+
+           /* Parse XML to get the size of each block in the arena */
+           GetNodeAttribute(t_tree, "block_size", m_cSize);
+
+           /* Parse XML to get the mass of each block in the arena */
+           GetNodeAttribute(t_tree, "block_mass", m_fMass);
+
+           /* Parse XML to get the spacing between LEDs in the blocks of the arena */
+           GetNodeAttribute(t_tree, "led_spacing", m_fGap);
+
+           /* Parse XML to get the number of blocks on each edge of the arena */
+           GetNodeAttribute(t_tree, "n_blocks", m_unNumberBoxes);
+
+           /* Parse XML to get the number of edges of of the arena */
+           GetNodeAttribute(t_tree, "n_edges", m_unNumberEdges);
+
+           m_pcLEDMedium = &CSimulator::GetInstance().GetMedium<CLEDMedium>(m_strLEDMedium);
+           m_pcPositionalEntity = new CPositionalEntity(this, "pose_0", m_cPosition, m_cOrientation);
+           AddComponent(*m_pcPositionalEntity);
+
+           PositionWalls();
+
+           /* Update components */
+           UpdateComponents();
+
+       }
       catch(CARGoSException& ex) {
          THROW_ARGOSEXCEPTION_NESTED("Failed to initialize entity \"" << GetId() << "\".", ex);
       }
@@ -213,6 +243,29 @@ namespace argos {
        Real fInnerRadious = (m_cSize.GetY() * m_unNumberBoxes) / (2 * Tan(CRadians::PI / m_unNumberEdges));
        return fInnerRadious;
    }
+
+   /****************************************/
+   /****************************************/
+
+         REGISTER_ENTITY(CArenaEntity,
+                         "cparena",
+                         "David Garzon Ramos [dgarzonr@ulb.ac.be]",
+                         "1.0",
+                         "Convex polygonal arena, developed at IRIDIA - ULB.",
+                         "The cparena is an arena designed to conduct experiments with the e-puck robot.\n"
+                         "For more information, refer to the dedicated web page\n"
+                         "(https://github.com/demiurge-project/argos3-arena).\n\n"
+                         "REQUIRED XML CONFIGURATION\n\n"
+                         "  <arena ...>\n"
+                         "    ...\n"
+                         "    <cparena id=\"cparena0\" position=\"0.0,0.0,0.0\" orientation=\"0,0,0\" block_size=\"0.01,0.25,0.1\" block_mass=\"1.0\" led_spacing=\"0.017\" led_medium=\"leds\" n_blocks=\"1\" n_edges=\"3\">\n"
+                         "    </cparena>\n"
+                         "    ...\n"
+                         "  </arena>\n\n"
+                         "Parameter description coming soon.\n\n",
+                         "Under development"
+                         );
+
 
    /****************************************/
    /****************************************/

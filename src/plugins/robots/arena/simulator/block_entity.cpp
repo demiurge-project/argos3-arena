@@ -32,7 +32,7 @@ namespace argos {
                               bool b_movable,
                               const CVector3& c_size,
                               Real f_mass) :
-      CComposableEntity(NULL, str_id),
+      CComposableEntity(pc_parent, str_id),
       m_pcEmbodiedEntity(
          new CEmbodiedEntity(this,
                              "body_0",

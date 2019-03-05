@@ -21,7 +21,7 @@ namespace argos {
                               UInt32 un_boxes,
                               Real f_gap,
                               Real f_mass) :
-      CComposableEntity(NULL, str_id){
+      CComposableEntity(pc_parent, str_id){
       try {
          /*
           * Create and init components

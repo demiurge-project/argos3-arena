@@ -25,6 +25,8 @@ namespace argos {
 
        ENABLE_VTABLE();
 
+      CArenaEntity();
+
       CArenaEntity(
                  const std::string& str_id,
                  const CVector3& c_position,
@@ -99,7 +101,10 @@ namespace argos {
       CPositionalEntity*          m_pcPositionalEntity;
       std::vector<CWallEntity*>  m_vWalls;
       CLEDMedium*               m_pcLEDMedium;
+      std::string               m_strLEDMedium;
       CVector3                  m_cSize;
+      CVector3                  m_cPosition;
+      CQuaternion               m_cOrientation;
       Real                      m_fMass;
       Real                      m_fGap;
       UInt32                    m_unNumberBoxes;
