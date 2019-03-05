@@ -43,6 +43,9 @@ namespace argos {
          m_fGap = f_gap;
          m_unNumberBoxes = un_boxes;
          m_unNumberEdges = un_edges;
+         m_strLEDMedium = str_led_medium;
+         m_cOrientation = c_orientation;
+         m_cPosition = c_position;
 
          AddComponent(*m_pcPositionalEntity);
 
@@ -252,20 +255,6 @@ namespace argos {
        pcLED.SetAllLEDsColors(vColor);
        pcLED.Update();*/
    }
-
-   /****************************************/
-   /****************************************/
-/*
-   void CArenaEntity::SetBoxColor(SInt32 unBoxID, CColor vColor){
-
-       CWallEntity* pcWall;
-       pcWall = m_vWalls.at(unWallID-1);
-       CBlockEntity* pcBlock;
-       pcBlock = pcWall->GetBlocks().at(unBoxID-1);
-       CLEDEquippedEntity& pcLED = pcBlock->GetLEDEquippedEntity();
-       pcLED.SetAllLEDsColors(vColor);
-       pcLED.Update();
-   }*/
 
    /****************************************/
    /****************************************/

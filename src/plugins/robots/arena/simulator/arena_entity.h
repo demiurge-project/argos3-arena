@@ -25,6 +25,9 @@ namespace argos {
 
        ENABLE_VTABLE();
 
+       typedef std::vector<CBlockEntity*> TBlocks;
+       typedef std::vector<TBlocks> TWalls;
+
       CArenaEntity();
 
       CArenaEntity(
@@ -43,10 +46,10 @@ namespace argos {
       virtual void Destroy();
 
       virtual std::string GetTypeDescription() const {
-         return "arena";
+         return "cparena";
       }
 
-      void AddWall(std::vector<CBlockEntity*> c_wall);
+      void AddWall(TBlocks c_wall);
 
       inline CPositionalEntity& GetPositionalEntity() {
          return *m_pcPositionalEntity;
@@ -56,11 +59,11 @@ namespace argos {
          return *m_pcPositionalEntity;
       }
 
-      inline const std::vector<CBlockEntity*>& GetBlocks() {
+      inline const TBlocks& GetBlocks() {
          return m_vBlocks;
       }
 
-      inline const std::vector<std::vector<CBlockEntity*>>& GetWalls() {
+      inline const TWalls& GetWalls() {
          return m_vWalls;
       }
 
@@ -76,30 +79,6 @@ namespace argos {
 
       void PositionBlocks(UInt32 c_wallId, CVector3 c_wallPosition, CQuaternion c_wallOrientation);
 
-      // TODO
-
-      void SetReferenceBlock(UInt32 unBoxID){
-          m_unReferenceBlock = unBoxID;
-      }
-
-      UInt32 GetReferenceBlock(UInt32){
-          return m_unReferenceBlock;
-      }
-
-      void SetBoxColor(SInt32 unBoxID, CColor vColor);
-
-      void SetLedColor(SInt32 unledID, SInt32 unBoxID, SInt32 unWallID, CColor vColor);
-
-      void SetLedColor(SInt32 unBoxID, SInt32 unWallID, CColor vColor);
-
-      void SetLedColor(SInt32 unWallID, CColor vColor);
-
-      void SetLedColor(CColor vColor);
-
-      UInt32 GetBoxParent();
-
-      //
-
       bool IsEven(UInt32 unNumber);
 
       Real InnerRadious();
@@ -107,8 +86,8 @@ namespace argos {
    private:
 
       CPositionalEntity*        m_pcPositionalEntity;
-      std::vector<CBlockEntity*>  m_vBlocks;
-      std::vector<std::vector<CBlockEntity*>>  m_vWalls;
+      TBlocks                   m_vBlocks;
+      TWalls                    m_vWalls;
       std::string               m_strLEDMedium;
       CLEDMedium*               m_pcLEDMedium;
       CQuaternion               m_cOrientation;
@@ -119,10 +98,6 @@ namespace argos {
       UInt32                    m_unNumberBoxes;
       UInt32                    m_unNumberEdges;
       UInt32                    m_unReferenceBlock;
-
-      //TODO
-
-      CControllableEntity*        m_pcControllableEntity;
 
    };
 
