@@ -16,7 +16,7 @@ namespace argos {
    /****************************************/
 
    //static const Real LED_RADIUS     = 0.0025f; // Original DAGR
-   static const Real LED_RADIUS     = 0.0085f; // Modified DAGR
+   static const Real LED_RADIUS     = 0.01f; // Modified DAGR
    const GLfloat MOVABLE_COLOR[]    = { 1.0f, 0.0f, 0.0f, 1.0f };
    const GLfloat NONMOVABLE_COLOR[] = { 0.7f, 0.7f, 0.7f, 1.0f };
    const GLfloat SPECULAR[]         = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -60,7 +60,7 @@ namespace argos {
       /* Draw the LEDs */
       GLfloat pfColor[]           = {   0.0f, 0.0f, 0.0f, 1.0f };
       const GLfloat pfSpecular[]  = {   0.0f, 0.0f, 0.0f, 1.0f };
-      const GLfloat pfShininess[] = { 100.0f                   };
+      const GLfloat pfShininess[] = {   0.0f                   };
       const GLfloat pfEmission[]  = {   0.0f, 0.0f, 0.0f, 1.0f };
       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pfSpecular);
       glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, pfShininess);
@@ -170,41 +170,39 @@ namespace argos {
       CVector3 cNormal, cPoint;
       CRadians cSlice(CRadians::TWO_PI / m_unVertices);
 
+      /* Original version */
+
       glBegin(GL_TRIANGLE_FAN);
       cNormal.Set(0.0f, 0.0f, 0.0f);
       cPoint = 1.0f * cNormal;
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-      cNormal.Set(0.0f, 1.0f, 1.0f);
+      cNormal.Set(0.0f, 6.2f, 4.0f);
       cPoint = LED_RADIUS * cNormal;
-      //cPoint.SetZ(0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-      cNormal.Set(0.0f, -1.0f, 1.0f);
+      cNormal.Set(0.0f, -6.2f, 4.0f);
       cPoint = LED_RADIUS * cNormal;
-      //cPoint.SetZ(0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-      cNormal.Set(0.0f, -1.0f, -1.0f);
+      cNormal.Set(0.0f, -6.2f, -4.0f);
       cPoint = LED_RADIUS * cNormal;
-      //cPoint.SetZ(-0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-      cNormal.Set(0.0f, 1.0f, -1.0f);
+      cNormal.Set(0.0f, 6.2f, -4.0f);
       cPoint = LED_RADIUS * cNormal;
-      //cPoint.SetZ(-0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
 
-      cNormal.Set(0.0f, 1.0f, 1.0f);
+      cNormal.Set(0.0f, 6.2f, 4.0f);
       cPoint = LED_RADIUS * cNormal;
-      //cPoint.SetZ(0.075f);
       glNormal3f(cNormal.GetX(), cNormal.GetY(), cNormal.GetZ());
       glVertex3f(cPoint.GetX(), cPoint.GetY(), cPoint.GetZ());
+
 
       glEnd();
    }
