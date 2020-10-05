@@ -17,11 +17,11 @@ if(ARGOS_BUILD_FOR_SIMULATOR)
 endif(ARGOS_BUILD_FOR_SIMULATOR)
 
 #
-# Check for Lua 5.2
+# Check for Lua 5.3
 #
-find_package(Lua52)
-if(LUA52_FOUND)
+find_package(Lua53)
+if(LUA53_FOUND)
   set(ARGOS_WITH_LUA ON)
   include_directories(${LUA_INCLUDE_DIR})
-endif(LUA52_FOUND)
+endif(LUA53_FOUND)
 
